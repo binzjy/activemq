@@ -9,9 +9,9 @@ import base64
 import urllib2
 import threading
 
-def user_port(port="8161", admin="admin"):
+def check_activemq(port="8161", admin="admin"):
 
-    def check_activemq(ip="127.0.0.1", passwd="admin"):
+    def ip_passwd(ip="127.0.0.1", passwd="admin"):
         date = time.strftime('%Y-%m%d-%H:%M')
         login_url = 'http://%s:%s/admin/xml/queues.jsp' %(ip, port)
 
@@ -64,11 +64,11 @@ def user_port(port="8161", admin="admin"):
                 print(login_url)
 #        else:
         print(" %s activemq is OK!" %ip)
-    return check_activemq
+    return ip_passwd
         
 
 def main():
-    check_mq = user_port(8161, "admin")
+    check_mq = check_activemq(8161, "admin")
     for ip in ['10.1.1.2', '10.1.1.3', '10.1.2.2', '10.1.2.3']:
         t = threading.Thread(target=check_mq, args=(ip, "activemq passwd"))
         t.start()
