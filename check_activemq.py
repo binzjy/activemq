@@ -33,7 +33,7 @@ def user_port(port="8161", admin="admin"):
             print "your username or password is wrong"
             sys.exit(1)
         except urllib2.URLError, e:
-            send_mail = "echo '%s activemq 连接失败，可能有问题，请查看！' |mail -s 'activemq error' zhang.jianyou@puscene.com" % ip
+            send_mail = "echo '%s %s activemq 连接失败，可能有问题，请查看！' |mail -s 'activemq error' zhang.jianyou@puscene.com" % (date, ip)
             os.system(send_mail)
             sys.exit(1)
 
