@@ -9,6 +9,8 @@ import base64
 import urllib2
 import threading
 
+ip_list = ['10.1.2.7', '10.1.2.8', '10.1.3.7', '10.1.3.5']
+
 def check_activemq(port="8161", admin="admin"):
 
     def ip_passwd(ip="127.0.0.1", passwd="admin"):
@@ -33,15 +35,11 @@ def check_activemq(port="8161", admin="admin"):
             print "your username or password is wrong"
             sys.exit(1)
         except urllib2.URLError, e:
-            send_mail = "echo '%s %s activemq 连接失败，可能有问题，请查看！' |mail -s 'activemq error' zhang.jianyou@puscene.com" % (date, ip)
+            send_mail = "echo '%s %s activemq 连接失败，可能有问题，请查看！' |mail -s 'activemq error' zhang.jianyou@puscene.com, lu.wanda@puscene.com" % (date, ip)
             os.system(send_mail)
             sys.exit(1)
 
         html = handle.read()
-
-        # 用正则提取出IP数值
-        # ip_add = r'(\d+\.\d+\.\d+\.\d+)' 
-        # ip_list = re.findall(ip_add, login_url)
 
         # 用正则匹配AMQ"Number of Pending Messages"数值
         r1 = r'size="([0-9]*)"'
@@ -60,17 +58,14 @@ def check_activemq(port="8161", admin="admin"):
             if int(num[1]) > 1000:
                 send_mail = "echo '%s %s activemq queue_name [%s] entry connections is more than [%s]' |mail -s 'Apache amq alarm' zhang.jianyou@puscene.com" % (date, ip, num[0], num[1])
                 os.system(send_mail)
-            elif len(login_url) == 0:
-                print(login_url)
-#        else:
         print(" %s activemq is OK!" %ip)
     return ip_passwd
         
 
 def main():
     check_mq = check_activemq(8161, "admin")
-    for ip in ['10.1.1.2', '10.1.1.3', '10.1.2.2', '10.1.2.3']:
-        t = threading.Thread(target=check_mq, args=(ip, "activemq passwd"))
+    for ip in ip_list: 
+        t = threading.Thread(target=check_mq, args=(ip, "activemq password"))
         t.start()
 
 if __name__ == "__main__":
